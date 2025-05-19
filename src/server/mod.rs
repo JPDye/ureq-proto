@@ -273,7 +273,11 @@ impl BodyState {
         self.writer.as_ref().unwrap().has_body()
     }
 }
-#[doc(hidden)]
+
+/// State types for the Reply state machine.
+///
+/// These types are used as type parameters to `Reply<B, State>` to represent
+/// the current state of the HTTP request/response state machine.
 pub mod state {
     pub(crate) trait Named {
         fn name() -> &'static str;
