@@ -36,6 +36,8 @@ impl Reply<SendResponse> {
     }
 
     /// Proceed to sending a response body or cleanup.
+    /// This returns `None` if we have not finished sending the request. It is guarenteed that if
+    /// `is_finished()` returns true, this will return `Some`.
     ///
     /// Transitions to either:
     /// - SendBody state if the response needs a body (based on status code and method)
@@ -44,8 +46,10 @@ impl Reply<SendResponse> {
     /// This is only possible when the response headers are fully written.
     ///
     /// Panics if the response headers have not been fully written.
-    pub fn proceed(self) -> SendResponseResult {
-        assert!(self.is_finished());
+    pub fn proceed(self) -> Option<SendResponseResult> {
+        if !self.is_finished() {
+            return None
+        }
 
         let inner = self.inner;
 
