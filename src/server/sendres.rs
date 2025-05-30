@@ -48,7 +48,7 @@ impl Reply<SendResponse> {
     /// Panics if the response headers have not been fully written.
     pub fn proceed(self) -> Option<SendResponseResult> {
         if !self.is_finished() {
-            return None
+            return None;
         }
 
         let inner = self.inner;
@@ -57,9 +57,9 @@ impl Reply<SendResponse> {
 
         // unwrap is ok because method is always set during request parsing
         if inner.state.need_response_body(method) {
-            SendResponseResult::SendBody(Reply::wrap(inner))
+            Some(SendResponseResult::SendBody(Reply::wrap(inner)))
         } else {
-            SendResponseResult::Cleanup(Reply::wrap(inner))
+            Some(SendResponseResult::Cleanup(Reply::wrap(inner)))
         }
     }
 }
